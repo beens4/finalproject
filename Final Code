@@ -1,0 +1,819 @@
+var currentScene; //value of current scene on screen
+var bitmojiMoveSpeed = 2;  //speed in which bitmoji moves
+var scene2Visited = false; //boolean to help reset scene 2
+var score = 0; //global score for questions right
+var questionNumber = 1; //determines which question and asnwers pop up
+
+var drawHair = function(x,y,bitmojiHeightA) {
+    
+    var ratio = bitmojiHeightA/100;
+
+    fill(176, 143, 76);
+    quad(x+61*ratio,y-37*ratio,x+46*ratio,y+72*ratio,x+152*ratio,y+81*ratio,x+141         *ratio,y-27*ratio);//hair
+};
+
+var drawHead = function(x,y,bitmojiHeightA) {
+        
+    var ratio = bitmojiHeightA/100;
+
+    fill(255, 235, 189);
+    rect (x+80*ratio,y+45*ratio, 40*ratio,40*ratio);
+    ellipse(x+100*ratio,y+0*ratio,80*ratio,105*ratio); //face shape
+};
+
+var drawBeanie = function(x,y,bitmojiHeightA) {
+     
+    var ratio = bitmojiHeightA/100;
+
+    fill(174, 225, 235); //beanie
+    arc(x+99*ratio, y-36*ratio, 75*ratio, 100*ratio, -179, -1);
+    rect(x+55*ratio,y-40*ratio,86*ratio,23*ratio);
+};
+
+var drawFaceStuff  = function(x,y,bitmojiHeightA) {
+    
+     var ratio = bitmojiHeightA/100;
+
+    line(x+100*+ratio,y+5*ratio,x+111*ratio,y+23*ratio);//da shnoz
+    line(x+100*ratio,y+25*ratio,x+110*ratio,y+23*ratio);
+    
+    fill(23, 88, 209);//glasses/eyes
+    rect(x+95*ratio, y-2*ratio,10*ratio,3*ratio);
+    arc(x+80*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+    arc(x+80*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+    arc(x+120*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+    arc(x+120*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+    rect(x+59*ratio,y-4*ratio,6*ratio,3*ratio);
+    rect(x+134*ratio,y-4*ratio,6*ratio,3*ratio);   
+    
+    fill(255, 235, 189);
+    ellipse(x+80*ratio,y+1*ratio,23*ratio,17*ratio);
+    ellipse(x+120*ratio,y+1*ratio,23*ratio,17*ratio); 
+
+    fill(21, 133, 143);
+    ellipse(x+120*ratio,y+0*ratio, 10*ratio,10*ratio);
+    ellipse(x+80*ratio,y+0*ratio, 10*ratio,10*ratio);
+    ellipse(x+120*ratio,y+0*ratio,10*ratio,10*ratio);
+    ellipse(x+80*ratio,y+0*ratio,10*ratio,10*ratio);
+    
+    fill(0, 0, 0);
+    ellipse (x+80*ratio,y+0*ratio, 4*ratio,4*ratio);
+    ellipse (x+120*ratio,y+0*ratio, 4*ratio,4*ratio);
+};
+
+var drawMouth = function (x,y,bitmojiHeight) {
+    
+    var ratio = bitmojiHeight/100;
+
+    fill(245, 245, 245); //mouf
+    line(x+86*ratio,y+32*ratio,x+116*ratio,y+31*ratio);
+    arc(x+101*ratio,y+32*ratio, 28*ratio,12*ratio,2,181);
+};
+
+var drawSweatshirt = function (x,y,bitmojiHeight) {
+    
+    var ratio = bitmojiHeight/100;
+
+    fill (156, 156, 156); //sweatshirt
+    quad(x+41*ratio,y+75*ratio, x+60*ratio,y+50*ratio, x+128*ratio,y+100*ratio, x+42      *ratio,y+100*ratio);
+    quad(x+81*ratio,y+100*ratio,x+141*ratio,y+51*ratio, x+163*ratio,y+78*ratio,x+165      *ratio, y+100*ratio);
+    fill(152, 86, 222);
+    textSize(37);
+    text ("A",x+63*ratio,y+94*ratio);
+    text ("J",x+112*ratio,y+94*ratio);
+};
+
+var drawAJ = function (x,y,bitmojiHeightA){
+    
+    drawHair(x,y,bitmojiHeightA);
+    drawHead(x,y,bitmojiHeightA);
+    drawBeanie(x,y,bitmojiHeightA);
+    drawFaceStuff(x,y,bitmojiHeightA);
+    drawMouth(x,y,bitmojiHeightA);
+    drawSweatshirt(x,y,bitmojiHeightA);
+};
+
+//describes paramaters of Zack's bitmoji
+var Zack = function(x, y, bitmojiHeight) {
+    this.x = x;
+    this.y = y;
+    this.bitmojiHeight = bitmojiHeight;
+};
+
+//code called upon to draw Zack's bitmoji 
+Zack.prototype.draw = function(x, y, bitmojiHeight) {
+
+        var ratio = this.bitmojiHeight/100;
+        
+        fill(219, 219, 219);//shirt
+        rect(this.x+0*ratio,this.y+90*ratio,60*ratio,107*ratio,50*ratio);
+        strokeWeight(2);
+        line(this.x+1*ratio,this.y+152*ratio,this.x+31*ratio,this.y+155*ratio);
+        line(this.x+8*ratio,this.y+172*ratio,this.x+30*ratio,this.y+156*ratio);
+        line(this.x+7*ratio,this.y+173*ratio,this.x+29*ratio,this.y+173*ratio);
+        line(this.x+29*ratio,this.y+174*ratio,this.x+20*ratio,this.y+191*ratio);
+        line(this.x+31*ratio,this.y+174*ratio,this.x+35*ratio,this.y+187*ratio);
+        line(this.x+44*ratio,this.y+175*ratio,this.x+36*ratio,this.y+186*ratio);
+        line(this.x+45*ratio,this.y+174*ratio,this.x+51*ratio,this.y+188*ratio);
+        
+        noStroke();//behind head hair
+        fill(199, 142, 58);
+        ellipse(this.x-7*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x+67*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+115*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+114*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-11*ratio,this.y+89*ratio,22*ratio,22*ratio);
+        strokeWeight(1);
+        stroke(0, 0, 0);//ear
+        fill(255,224,189);
+        ellipse(this.x+78*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        ellipse(this.x-18*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        stroke(0, 0, 0);//head
+        ellipse(this.x+30*ratio,this.y+100*ratio,100*ratio,101*ratio);
+        fill(255, 255, 255);//eyes
+        ellipse(this.x+56*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        ellipse(this.x+11*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        fill(116, 183, 214);
+        ellipse(this.x+56*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        ellipse(this.x+13*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        stroke(145, 92, 0);//eyebrows
+        strokeWeight(1.8);
+        line(this.x+71*ratio,this.y+76*ratio,this.x+39*ratio,this.y+75*ratio);
+        line(this.x-3*ratio,this.y+76*ratio,this.x+26*ratio,this.y+75*ratio);
+        fill(214, 120, 120);//mouth
+        arc(this.x+34*ratio,this.y+128*ratio,32*ratio,22*ratio,0,180);
+        noStroke();//hair
+        fill(199, 142, 58);
+        ellipse(this.x+2*ratio,this.y+63*ratio,52*ratio,19*ratio);
+        ellipse(this.x+5*ratio,this.y+58*ratio,52*ratio,19*ratio);
+        ellipse(this.x+16*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        ellipse(this.x+32*ratio,this.y+47*ratio,52*ratio,19*ratio);
+        ellipse(this.x+66*ratio,this.y+61*ratio,52*ratio,19*ratio);
+        ellipse(this.x+57*ratio,this.y+54*ratio,52*ratio,19*ratio);
+        ellipse(this.x+48*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        arc(this.x+66*ratio,this.y+48*ratio,69*ratio,67*ratio,34,197);
+        arc(this.x+1*ratio,this.y+48*ratio,69*ratio,65*ratio,-17,142);
+        stroke(0, 0, 0);//nose
+        strokeWeight(1);
+        fill(255,224,189);
+        line(this.x+42*ratio,this.y+122*ratio,this.x+36*ratio,this.y+103*ratio);
+        line(this.x+31*ratio,this.y+121*ratio,this.x+40*ratio,this.y+121*ratio);
+};
+   
+//movement prototypes
+Zack.prototype.up = function() {
+    this.y -= bitmojiMoveSpeed;
+};
+
+Zack.prototype.down = function() {
+    this.y += bitmojiMoveSpeed;
+};
+
+Zack.prototype.left = function() {
+    this.x -= bitmojiMoveSpeed;
+};
+
+Zack.prototype.right = function() {
+    this.x += bitmojiMoveSpeed;
+};
+
+//scene 1 Zack
+var zackBitmoji1 = new Zack(47, 127,80);
+//scene 2 Zack
+var zackBitmoji2 = new Zack(184, 290,50);
+
+//Start button scene 1
+var btn1 = {
+    x: 166,
+    y: 320,
+    width: 58,
+    height: 25,
+};
+//restart button scene 2
+var btn2 = {
+    x: 312,
+    y: 11,
+    width: 81,
+    height: 25,
+};
+
+var drawButton = function(btn) {
+    fill(31, 219, 56);
+    rect(btn.x, btn.y, btn.width, btn.height, 5);
+};
+
+//checks if mouse is within buttons physical parameters
+var isMouseInside = function(btn) {
+    return (mouseX >= btn.x &&
+            mouseX <= (btn.x+btn.width) &&
+            mouseY >= btn.y && 
+            mouseY <= (btn.y+btn.height));
+};
+
+//splash screen
+var drawScene1 = function() {
+    currentScene = 1;
+    if (currentScene === 1) {
+        background(187, 234, 250);
+        fill(0, 85, 255);
+        textSize(22);
+        line(188,210,260,150);
+        fill(255, 255, 255);
+        ellipse(262,101,240,110);
+        fill(125, 64, 7);
+        rect(0,285,400,121);
+        image(getImage("avatars/old-spice-man"),126,205,80,80);
+        drawButton(btn1);
+        fill(171, 23, 230);
+        text("Are You Smarter Than", 153, 100);
+        text("a 5th Grader?", 196, 127);
+        fill(255, 255, 255);
+        textSize(16);
+        text("START", 170,339);
+        textSize(18);
+        text("Zachary Maxfield & AJ Johnson", 66, 375);
+        zackBitmoji1.draw();
+        drawAJ(257,215,70);
+    }
+};
+
+var winScreen = function (){
+
+    background(106, 255, 0);
+    var drawHair = function(x,y,bitmojiHeightA) {
+    var ratio = bitmojiHeightA/100;
+        fill(176, 143, 76);
+        quad(x+61*ratio,y-37*ratio,x+46*ratio,y+72*ratio,x+152*ratio,y+81*ratio,x+141         *ratio,y-27*ratio);//hair
+    };
+
+    var drawHead = function(x,y,bitmojiHeightA) {
+        var ratio = bitmojiHeightA/100;
+        fill(255, 235, 189);
+        rect (x+80*ratio,y+45*ratio, 40*ratio,40*ratio);
+        ellipse(x+100*ratio,y+0*ratio,80*ratio,105*ratio); //face shape
+    };
+
+    var drawBeanie = function(x,y,bitmojiHeightA) {
+        var ratio = bitmojiHeightA/100;
+        fill(174, 225, 235); //beanie
+        arc(x+99*ratio, y-36*ratio, 75*ratio, 100*ratio, -179, -1);
+        rect(x+55*ratio,y-40*ratio,86*ratio,23*ratio);
+    };
+
+    var drawFaceStuff  = function(x,y,bitmojiHeightA) {
+        var ratio = bitmojiHeightA/100;
+        line(x+100*+ratio,y+5*ratio,x+111*ratio,y+23*ratio);//da shnoz
+        line(x+100*ratio,y+25*ratio,x+110*ratio,y+23*ratio);
+    
+        fill(23, 88, 209);//glasses/eyes
+        rect(x+95*ratio, y-2*ratio,10*ratio,3*ratio);
+        arc(x+80*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+        arc(x+80*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+        arc(x+120*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+        arc(x+120*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+        rect(x+59*ratio,y-4*ratio,6*ratio,3*ratio);
+        rect(x+134*ratio,y-4*ratio,6*ratio,3*ratio);   
+        
+        fill(255, 235, 189);
+        ellipse(x+80*ratio,y+1*ratio,23*ratio,17*ratio);
+        ellipse(x+120*ratio,y+1*ratio,23*ratio,17*ratio); 
+    
+        fill(21, 133, 143);
+        ellipse(x+120*ratio,y+0*ratio, 10*ratio,10*ratio);
+        ellipse(x+80*ratio,y+0*ratio, 10*ratio,10*ratio);
+        ellipse(x+120*ratio,y+0*ratio,10*ratio,10*ratio);
+        ellipse(x+80*ratio,y+0*ratio,10*ratio,10*ratio);
+        
+        fill(0, 0, 0);
+        ellipse (x+80*ratio,y+0*ratio, 4*ratio,4*ratio);
+        ellipse (x+120*ratio,y+0*ratio, 4*ratio,4*ratio);
+    };
+
+    var drawMouth = function (x,y,bitmojiHeight) {
+        var ratio = bitmojiHeight/100;
+        fill(245, 245, 245); //mouf
+        line(x+86*ratio,y+32*ratio,x+116*ratio,y+31*ratio);
+        arc(x+101*ratio,y+32*ratio, 28*ratio,12*ratio,2,181);
+    };
+
+    var drawSweatshirt = function (x,y,bitmojiHeight) {
+        var ratio = bitmojiHeight/100;
+        fill (156, 156, 156); //sweatshirt
+        quad(x+41*ratio,y+75*ratio, x+60*ratio,y+50*ratio, x+128*ratio,y+100*ratio, x         +42*ratio,y+100*ratio);
+        quad(x+81*ratio,y+100*ratio,x+141*ratio,y+51*ratio, x+163*ratio,y+78*ratio,x          +165*ratio, y+100*ratio);
+        fill(152, 86, 222);
+        textSize(37);
+        text ("A",x+63*ratio,y+94*ratio);
+        text ("J",x+112*ratio,y+94*ratio);
+    };
+
+    var drawAJ = function (x,y,bitmojiHeightA){
+        drawHair(x,y,bitmojiHeightA);
+        drawHead(x,y,bitmojiHeightA);
+        drawBeanie(x,y,bitmojiHeightA);
+        drawFaceStuff(x,y,bitmojiHeightA);
+        drawMouth(x,y,bitmojiHeightA);
+        drawSweatshirt(x,y,bitmojiHeightA);
+    };
+
+    //describes paramaters of Zack's bitmoji
+    var Zack = function(x, y, bitmojiHeight) {
+        this.x = x;
+        this.y = y;
+        this.bitmojiHeight = bitmojiHeight;
+    };
+
+    //code called upon to draw Zack's bitmoji 
+    Zack.prototype.draw = function(x, y, bitmojiHeight) {
+        var ratio = this.bitmojiHeight/100;
+        fill(219, 219, 219);//shirt
+        rect(this.x+0*ratio,this.y+90*ratio,60*ratio,107*ratio,50*ratio);
+        strokeWeight(2);
+        line(this.x+1*ratio,this.y+152*ratio,this.x+31*ratio,this.y+155*ratio);
+        line(this.x+8*ratio,this.y+172*ratio,this.x+30*ratio,this.y+156*ratio);
+        line(this.x+7*ratio,this.y+173*ratio,this.x+29*ratio,this.y+173*ratio);
+        line(this.x+29*ratio,this.y+174*ratio,this.x+20*ratio,this.y+191*ratio);
+        line(this.x+31*ratio,this.y+174*ratio,this.x+35*ratio,this.y+187*ratio);
+        line(this.x+44*ratio,this.y+175*ratio,this.x+36*ratio,this.y+186*ratio);
+        line(this.x+45*ratio,this.y+174*ratio,this.x+51*ratio,this.y+188*ratio);
+        noStroke();//behind head hair
+        fill(199, 142, 58);
+        ellipse(this.x-7*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x+67*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+115*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+114*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-11*ratio,this.y+89*ratio,22*ratio,22*ratio);
+        strokeWeight(1);
+        stroke(0, 0, 0);//ear
+        fill(255,224,189);
+        ellipse(this.x+78*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        ellipse(this.x-18*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        stroke(0, 0, 0);//head
+        ellipse(this.x+30*ratio,this.y+100*ratio,100*ratio,101*ratio);
+        fill(255, 255, 255);//eyes
+        ellipse(this.x+56*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        ellipse(this.x+11*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        fill(116, 183, 214);
+        ellipse(this.x+56*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        ellipse(this.x+13*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        stroke(145, 92, 0);//eyebrows
+        strokeWeight(1.8);
+        line(this.x+71*ratio,this.y+76*ratio,this.x+39*ratio,this.y+75*ratio);
+        line(this.x-3*ratio,this.y+76*ratio,this.x+26*ratio,this.y+75*ratio);
+        fill(214, 120, 120);//mouth
+        arc(this.x+34*ratio,this.y+128*ratio,32*ratio,22*ratio,0,180);
+        noStroke();//hair
+        fill(199, 142, 58);
+        ellipse(this.x+2*ratio,this.y+63*ratio,52*ratio,19*ratio);
+        ellipse(this.x+5*ratio,this.y+58*ratio,52*ratio,19*ratio);
+        ellipse(this.x+16*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        ellipse(this.x+32*ratio,this.y+47*ratio,52*ratio,19*ratio);
+        ellipse(this.x+66*ratio,this.y+61*ratio,52*ratio,19*ratio);
+        ellipse(this.x+57*ratio,this.y+54*ratio,52*ratio,19*ratio);
+        ellipse(this.x+48*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        arc(this.x+66*ratio,this.y+48*ratio,69*ratio,67*ratio,34,197);
+        arc(this.x+1*ratio,this.y+48*ratio,69*ratio,65*ratio,-17,142);
+        stroke(0, 0, 0);//nose
+        strokeWeight(1);
+        fill(255,224,189);
+        line(this.x+42*ratio,this.y+122*ratio,this.x+36*ratio,this.y+103*ratio);
+        line(this.x+31*ratio,this.y+121*ratio,this.x+40*ratio,this.y+121*ratio);
+    };
+
+    var zackBitmoji1 = new Zack(50, 200,80);
+    zackBitmoji1.draw();
+    drawAJ(245,285,80);
+    fill(255, 255, 255);
+    ellipse(200,145,382,126);
+    line(148,206,125,276);
+    line(240,205,281,288);
+    textSize(19);
+    fill(0, 0, 0);
+    text("You ARE smarter than a 5th grader :D", 37,150);
+
+    //restart button scene 3
+    var btn3 = {
+        x: 312,
+        y: 11,
+        width: 81,
+        height: 25,
+    };
+    var drawButton = function(btn) {
+        fill(255, 255, 255);
+        rect(btn.x, btn.y, btn.width, btn.height, 5);
+        fill(0, 0, 0);
+        textSize(16);
+        text("RESTART",btn.x+4,btn.y+19);
+    };
+    mouseClicked = function() {
+        if (isMouseInside(btn3)) {
+            drawScene1();
+            currentScene = 1;
+        }
+    };
+    //checks if mouse is within buttons physical parameters
+        var isMouseInside = function(btn) {
+            return (mouseX >= btn.x &&
+                    mouseX <= (btn.x+btn.width) &&
+                    mouseY >= btn.y && 
+                    mouseY <= (btn.y+btn.height));
+    };
+        drawButton(btn3);
+};
+
+var loseScreen = function() {
+    
+    background(255, 0, 0);
+    var drawHair = function(x,y,bitmojiHeightA) {
+        
+        var ratio = bitmojiHeightA/100;
+    
+        fill(176, 143, 76);
+        quad(x+61*ratio,y-37*ratio,x+46*ratio,y+72*ratio,x+152*ratio,y+81*ratio,x+141         *ratio,y-27*ratio);//hair
+    };
+    
+    var drawHead = function(x,y,bitmojiHeightA) {
+            
+        var ratio = bitmojiHeightA/100;
+    
+        fill(255, 235, 189);
+        rect (x+80*ratio,y+45*ratio, 40*ratio,40*ratio);
+        ellipse(x+100*ratio,y+0*ratio,80*ratio,105*ratio); //face shape
+    };
+    
+    var drawBeanie = function(x,y,bitmojiHeightA) {
+         
+        var ratio = bitmojiHeightA/100;
+    
+        fill(174, 225, 235); //beanie
+        arc(x+99*ratio, y-36*ratio, 75*ratio, 100*ratio, -179, -1);
+        rect(x+55*ratio,y-40*ratio,86*ratio,23*ratio);
+    };
+    
+    var drawFaceStuff  = function(x,y,bitmojiHeightA) {
+        
+         var ratio = bitmojiHeightA/100;
+    
+        line(x+100*+ratio,y+5*ratio,x+111*ratio,y+23*ratio);//da shnoz
+        line(x+100*ratio,y+25*ratio,x+110*ratio,y+23*ratio);
+        
+        fill(23, 88, 209);//glasses/eyes
+        rect(x+95*ratio, y-2*ratio,10*ratio,3*ratio);
+        arc(x+80*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+        arc(x+80*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+        arc(x+120*ratio,y+0*ratio,30*ratio,25*ratio,0,180);
+        arc(x+120*ratio,y+0*ratio,30*ratio,20*ratio,180, 360);
+        rect(x+59*ratio,y-4*ratio,6*ratio,3*ratio);
+        rect(x+134*ratio,y-4*ratio,6*ratio,3*ratio);   
+        
+        fill(255, 235, 189);
+        ellipse(x+80*ratio,y+1*ratio,23*ratio,17*ratio);
+        ellipse(x+120*ratio,y+1*ratio,23*ratio,17*ratio); 
+    
+        fill(21, 133, 143);
+        ellipse(x+120*ratio,y+0*ratio, 10*ratio,10*ratio);
+        ellipse(x+80*ratio,y+0*ratio, 10*ratio,10*ratio);
+        ellipse(x+120*ratio,y+0*ratio,10*ratio,10*ratio);
+        ellipse(x+80*ratio,y+0*ratio,10*ratio,10*ratio);
+        
+        fill(0, 0, 0);
+        ellipse (x+80*ratio,y+0*ratio, 4*ratio,4*ratio);
+        ellipse (x+120*ratio,y+0*ratio, 4*ratio,4*ratio);
+    };
+    
+    var drawMouth = function (x,y,bitmojiHeight) {
+        
+        var ratio = bitmojiHeight/100;
+    
+        fill(245, 245, 245); //mouf
+        line(x+86*ratio,y+32*ratio,x+116*ratio,y+31*ratio);
+        arc(x+101*ratio,y+32*ratio, 28*ratio,12*ratio,2,181);
+    };
+    
+    var drawSweatshirt = function (x,y,bitmojiHeight) {
+        
+        var ratio = bitmojiHeight/100;
+    
+        fill (156, 156, 156); //sweatshirt
+        quad(x+41*ratio,y+75*ratio, x+60*ratio,y+50*ratio, x+128*ratio,y+100*ratio, x+42      *ratio,y+100*ratio);
+        quad(x+81*ratio,y+100*ratio,x+141*ratio,y+51*ratio, x+163*ratio,y+78*ratio,x+165      *ratio, y+100*ratio);
+        fill(152, 86, 222);
+        textSize(37);
+        text ("A",x+63*ratio,y+94*ratio);
+        text ("J",x+112*ratio,y+94*ratio);
+    };
+    
+    var drawAJ = function (x,y,bitmojiHeightA){
+        
+        drawHair(x,y,bitmojiHeightA);
+        drawHead(x,y,bitmojiHeightA);
+        drawBeanie(x,y,bitmojiHeightA);
+        drawFaceStuff(x,y,bitmojiHeightA);
+        drawMouth(x,y,bitmojiHeightA);
+        drawSweatshirt(x,y,bitmojiHeightA);
+    };
+    
+    //describes paramaters of Zack's bitmoji
+    var Zack = function(x, y, bitmojiHeight) {
+        this.x = x;
+        this.y = y;
+        this.bitmojiHeight = bitmojiHeight;
+    };
+    
+    //code called upon to draw Zack's bitmoji 
+    Zack.prototype.draw = function(x, y, bitmojiHeight) {
+    
+            var ratio = this.bitmojiHeight/100;
+            
+            fill(219, 219, 219);//shirt
+            rect(this.x+0*ratio,this.y+90*ratio,60*ratio,107*ratio,50*ratio);
+            strokeWeight(2);
+            line(this.x+1*ratio,this.y+152*ratio,this.x+31*ratio,this.y+155*ratio);
+            line(this.x+8*ratio,this.y+172*ratio,this.x+30*ratio,this.y+156*ratio);
+            line(this.x+7*ratio,this.y+173*ratio,this.x+29*ratio,this.y+173*ratio);
+            line(this.x+29*ratio,this.y+174*ratio,this.x+20*ratio,this.y+191*ratio);
+            line(this.x+31*ratio,this.y+174*ratio,this.x+35*ratio,this.y+187*ratio);
+            line(this.x+44*ratio,this.y+175*ratio,this.x+36*ratio,this.y+186*ratio);
+            line(this.x+45*ratio,this.y+174*ratio,this.x+51*ratio,this.y+188*ratio);
+            
+            noStroke();//behind head hair
+            fill(199, 142, 58);
+            ellipse(this.x-7*ratio,this.y+127*ratio,22*ratio,22*ratio);
+            ellipse(this.x+67*ratio,this.y+127*ratio,22*ratio,22*ratio);
+            ellipse(this.x-10*ratio,this.y+115*ratio,22*ratio,22*ratio);
+            ellipse(this.x+70*ratio,this.y+114*ratio,22*ratio,22*ratio);
+            ellipse(this.x+70*ratio,this.y+83*ratio,22*ratio,22*ratio);
+            ellipse(this.x-10*ratio,this.y+83*ratio,22*ratio,22*ratio);
+            ellipse(this.x-11*ratio,this.y+89*ratio,22*ratio,22*ratio);
+            strokeWeight(1);
+            stroke(0, 0, 0);//ear
+            fill(255,224,189);
+            ellipse(this.x+78*ratio,this.y+102*ratio,15*ratio,20*ratio);
+            ellipse(this.x-18*ratio,this.y+102*ratio,15*ratio,20*ratio);
+            stroke(0, 0, 0);//head
+            ellipse(this.x+30*ratio,this.y+100*ratio,100*ratio,101*ratio);
+            fill(255, 255, 255);//eyes
+            ellipse(this.x+56*ratio,this.y+94*ratio,30*ratio,30*ratio);
+            ellipse(this.x+11*ratio,this.y+94*ratio,30*ratio,30*ratio);
+            fill(116, 183, 214);
+            ellipse(this.x+56*ratio,this.y+94*ratio,16*ratio,15*ratio);
+            ellipse(this.x+13*ratio,this.y+94*ratio,16*ratio,15*ratio);
+            stroke(145, 92, 0);//eyebrows
+            strokeWeight(1.8);
+            line(this.x+71*ratio,this.y+76*ratio,this.x+39*ratio,this.y+75*ratio);
+            line(this.x-3*ratio,this.y+76*ratio,this.x+26*ratio,this.y+75*ratio);
+            fill(214, 120, 120);//mouth
+            arc(this.x+34*ratio,this.y+128*ratio,32*ratio,22*ratio,0,180);
+            noStroke();//hair
+            fill(199, 142, 58);
+            ellipse(this.x+2*ratio,this.y+63*ratio,52*ratio,19*ratio);
+            ellipse(this.x+5*ratio,this.y+58*ratio,52*ratio,19*ratio);
+            ellipse(this.x+16*ratio,this.y+51*ratio,52*ratio,19*ratio);
+            ellipse(this.x+32*ratio,this.y+47*ratio,52*ratio,19*ratio);
+            ellipse(this.x+66*ratio,this.y+61*ratio,52*ratio,19*ratio);
+            ellipse(this.x+57*ratio,this.y+54*ratio,52*ratio,19*ratio);
+            ellipse(this.x+48*ratio,this.y+51*ratio,52*ratio,19*ratio);
+            arc(this.x+66*ratio,this.y+48*ratio,69*ratio,67*ratio,34,197);
+            arc(this.x+1*ratio,this.y+48*ratio,69*ratio,65*ratio,-17,142);
+            stroke(0, 0, 0);//nose
+            strokeWeight(1);
+            fill(255,224,189);
+            line(this.x+42*ratio,this.y+122*ratio,this.x+36*ratio,this.y+103*ratio);
+            line(this.x+31*ratio,this.y+121*ratio,this.x+40*ratio,this.y+121*ratio);
+    };
+    
+    var zackBitmoji1 = new Zack(49, 200,80);
+    zackBitmoji1.draw();
+    drawAJ(245,285,80);
+    fill(255, 255, 255);
+    ellipse(200,145,382,126);
+    line(148,206,125,276);
+    line(240,205,281,288);
+    textSize(19);
+    fill(0, 0, 0);
+    text("You are NOT smarter than a 5th grader :(", 29,150);
+    
+    //restart button scene 4
+    var btn4 = {
+        x: 312,
+        y: 11,
+        width: 81,
+        height: 25,
+    };
+    var drawButton = function(btn) {
+        fill(255, 255, 255);
+        rect(btn.x, btn.y, btn.width, btn.height, 5);
+        fill(0, 0, 0);
+        textSize(16);
+        text("RESTART",btn.x+4,btn.y+19);
+    };
+    //checks if mouse is within buttons physical parameters
+    var isMouseInside = function(btn) {
+        return (mouseX >= btn.x &&
+                mouseX <= (btn.x+btn.width) &&
+                mouseY >= btn.y && 
+                mouseY <= (btn.y+btn.height));
+    };
+    drawButton(btn4);
+};
+
+var endScreen = function() {
+    if (score >= 4) {
+        winScreen();
+    }else if (score < 4) {
+        loseScreen();
+    }
+};
+
+var questionChange = function() {
+    if (questionNumber === 1) {
+        fill(255, 255, 255);
+        rect(21,50,360,44);
+        fill(255, 143, 238);
+        rect(10,140,100,100);
+        fill(240, 231, 53);
+        rect(150,140,100,100);
+        fill(0, 255, 174);
+        rect(290,140,100,100);
+        fill(0, 0, 0);
+        text("Who wrote the famous play Romeo and Juliet?", 35,78);
+        text("William", 33, 186);
+        text("Shakespeare", 13, 204);            
+        text("Edgar Allen", 158, 186);
+        text("Poe", 185, 204);
+        text("Oscar Wilde", 297, 196);  
+            if (zackBitmoji2.x >= 10 && zackBitmoji2.x <= 110 && zackBitmoji2.y >= 140             && zackBitmoji2.y <= 165) {
+                score += 1;
+                questionNumber = 2;
+                zackBitmoji2.x = 184;
+                zackBitmoji2.y = 290;
+            } else if (zackBitmoji2.x >= 150 && zackBitmoji2.x <=250 && zackBitmoji2.y             >= 140 && zackBitmoji2.y <= 165 || zackBitmoji2.x >= 290 && zackBitmoji2.x             <= 390 && zackBitmoji2.y >= 140 && zackBitmoji2.y <= 165) {
+                questionNumber = 2;
+                zackBitmoji2.x = 184;
+                zackBitmoji2.y = 290;
+            }
+    } else if (questionNumber === 2) {
+        fill(255, 255, 255);
+        rect(46,50,307,44);
+        fill(145, 145, 255);
+        rect(10,140,100,100);
+        fill(214, 60, 90);
+        rect(150,140,100,100);
+        fill(115, 255, 0);
+        rect(290,140,100,100);
+        fill(0, 0, 0);
+        text("How many feet are there in 75 yards?", 68,78);
+        text("25", 53,196);
+        text("150", 186,196);
+        text("225", 328,196);
+            if (zackBitmoji2.x >= 10 && zackBitmoji2.x <= 110 && zackBitmoji2.y >= 140             && zackBitmoji2.y <= 175 || zackBitmoji2.x >= 150 && zackBitmoji2.x <=250             && zackBitmoji2.y >= 140 && zackBitmoji2.y <= 175) {
+                questionNumber = 3;
+                zackBitmoji2.x = 184;
+                zackBitmoji2.y = 290;
+            } else if (zackBitmoji2.x >= 290 && zackBitmoji2.x <= 390 && zackBitmoji2             .y >= 140 && zackBitmoji2.y <= 175) {
+                score += 1;
+                questionNumber = 3;
+                zackBitmoji2.x = 184;
+                zackBitmoji2.y = 290;
+            }
+    } else if (questionNumber === 3) {
+        fill(255, 255, 255);
+        rect(60,50,277,44);
+        fill(177, 242, 232);
+        rect(10,140,100,100);
+        fill(252, 204, 70);
+        rect(150,140,100,100);
+        fill(255, 0, 251);
+        rect(290,140,100,100);
+        fill(0, 0, 0);
+        text("What does a paleontologist study?", 76,78);
+        text("Fish", 45,196);
+        text("Volcanoes", 163,196);
+        text("Fossils", 315,196);
+            if (zackBitmoji2.x >= 10 && zackBitmoji2.x <= 110 && zackBitmoji2.y >= 140             && zackBitmoji2.y <= 175 || zackBitmoji2.x >= 150 && zackBitmoji2.x <=250             && zackBitmoji2.y >= 140 && zackBitmoji2.y <= 175) {
+                    questionNumber = 4;
+                    zackBitmoji2.x = 184;
+                    zackBitmoji2.y = 290;
+            } else if (zackBitmoji2.x >= 290 && zackBitmoji2.x <= 390 && zackBitmoji2             .y >= 140 && zackBitmoji2.y <= 175) {
+                    score += 1;
+                    questionNumber = 4;
+                    zackBitmoji2.x = 184;
+                    zackBitmoji2.y = 290;
+            }
+    } else if (questionNumber === 4) {
+        fill(255, 255, 255);
+        rect(76,50,242,44);
+        fill(197, 180, 240);
+        rect(10,140,100,100);
+        fill(255, 0, 0);
+        rect(150,140,100,100);
+        fill(71, 230, 62);
+        rect(290,140,100,100);
+        fill(0, 0, 0);
+        text("Who Invented the Lightbulb?", 95,78);
+        text("Albert", 39,186);
+        text("Einstein", 33,204);
+        text("Thomas", 170,186);
+        text("Edison", 175,204);
+        text("Nikola", 319,186);
+        text("Tesla", 322,204);
+        if (zackBitmoji2.x >= 10 && zackBitmoji2.x <= 110 && zackBitmoji2.y >= 140            && zackBitmoji2.y <= 175 || zackBitmoji2.x >= 290 && zackBitmoji2.x <= 390 &&         zackBitmoji2.y >= 140 && zackBitmoji2.y <= 175) {
+                questionNumber = 5;
+                zackBitmoji2.x = 184;
+                zackBitmoji2.y = 290;
+            } else if (zackBitmoji2.x >= 150 && zackBitmoji2.x <=250 && zackBitmoji2.y             >= 140 && zackBitmoji2.y <= 175) {
+                    score += 1;
+                    questionNumber = 5;
+                    zackBitmoji2.x = 184;
+                    zackBitmoji2.y = 290;
+            }
+    } else if (questionNumber === 5) {
+        fill(255, 255, 255);
+        rect(21,50,360,68);
+        fill(255, 143, 238);
+        rect(10,140,100,100);
+        fill(240, 231, 53);
+        rect(150,140,100,100);
+        fill(0, 255, 174);
+        rect(290,140,100,100);
+        fill(0, 0, 0);
+        text("What is the body of water between Florida", 51,78);
+        text("and Texas called?", 135, 103);
+        text("Gulf of", 35, 186);
+        text("Mexico", 34, 204);            
+        text("Pacific", 176, 186);
+        text("Ocean", 176, 204);            
+        text("Florida", 316, 186); 
+        text("Everglades", 302, 204);            
+            if (zackBitmoji2.x >= 10 && zackBitmoji2.x <= 110 && zackBitmoji2.y >= 140             && zackBitmoji2.y <= 165) {
+                score += 1;
+                questionNumber = 6;
+                zackBitmoji2.x = 10000;
+                zackBitmoji2.y = 10000;
+            } else if (zackBitmoji2.x >= 150 && zackBitmoji2.x <=250 && zackBitmoji2.y             >= 140 && zackBitmoji2.y <= 165 || zackBitmoji2.x >= 290 && zackBitmoji2.x             <= 390 && zackBitmoji2.y >= 140 && zackBitmoji2.y <= 165) {
+                questionNumber = 6;
+                zackBitmoji2.x = 10000;
+                zackBitmoji2.y = 10000;
+            }
+    } else if (questionNumber === 6) {
+        endScreen();
+}
+};
+
+//game screen
+var drawScene2 = function() {
+    currentScene = 2;
+    background(242, 239, 201);
+    zackBitmoji2.draw(); 
+    drawButton(btn2);
+    fill(255, 255, 255);
+    textSize(16);
+    text("RESTART", 317, 30);
+    fill(0, 0, 0);
+    questionChange();
+};
+
+//function that switches scenes and resets scene 2
+mouseClicked = function() {
+    if (isMouseInside(btn1)) {
+        if (scene2Visited) {
+            zackBitmoji2 = new Zack(188, 290, 50);
+        }
+        drawScene2();
+        currentScene = 2;
+    } else if (isMouseInside(btn2)) {
+        currentScene = 1;
+        drawScene1();
+        scene2Visited = true;
+    }
+};
+
+//hardcoded key numbers for Zack's bitmoji movement
+var keyPressed = function() {
+    if (currentScene === 2) {
+        if (keyCode === 38) {
+            zackBitmoji2.up();
+        } else if (keyCode === 40) {
+            zackBitmoji2.down();
+        } else if (keyCode === 39) {
+            zackBitmoji2.right();
+        } else if (keyCode === 37) {
+            zackBitmoji2.left();
+        }
+    }
+};
+
+var draw = function() {
+    if (currentScene === 2) {
+        drawScene2();
+        if (keyIsPressed) {
+            keyPressed();
+        }
+    }
+};
+
+drawScene1();
