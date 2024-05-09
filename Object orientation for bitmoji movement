@@ -1,0 +1,99 @@
+var Zack = function(x, y, bitmojiHeight) {
+    this.x = x;
+    this.y = y;
+    this.bitmojiHeight = bitmojiHeight;
+};
+
+Zack.prototype.draw = function(x, y, bitmojiHeight) {
+
+        var ratio = this.bitmojiHeight/100;
+        
+        fill(219, 219, 219);//shirt
+        rect(this.x+0*ratio,this.y+90*ratio,60*ratio,107*ratio,50*ratio);
+        strokeWeight(2);
+        line(this.x+1*ratio,this.y+152*ratio,this.x+31*ratio,this.y+155*ratio);
+        line(this.x+8*ratio,this.y+172*ratio,this.x+30*ratio,this.y+156*ratio);
+        line(this.x+7*ratio,this.y+173*ratio,this.x+29*ratio,this.y+173*ratio);
+        line(this.x+29*ratio,this.y+174*ratio,this.x+20*ratio,this.y+191*ratio);
+        line(this.x+31*ratio,this.y+174*ratio,this.x+35*ratio,this.y+187*ratio);
+        line(this.x+44*ratio,this.y+175*ratio,this.x+36*ratio,this.y+186*ratio);
+        line(this.x+45*ratio,this.y+174*ratio,this.x+51*ratio,this.y+188*ratio);
+        
+        noStroke();//behind head hair
+        fill(199, 142, 58);
+        ellipse(this.x-7*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x+67*ratio,this.y+127*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+115*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+114*ratio,22*ratio,22*ratio);
+        ellipse(this.x+70*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-10*ratio,this.y+83*ratio,22*ratio,22*ratio);
+        ellipse(this.x-11*ratio,this.y+89*ratio,22*ratio,22*ratio);
+        strokeWeight(1);
+        stroke(0, 0, 0);//ear
+        fill(255,224,189);
+        ellipse(this.x+78*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        ellipse(this.x-18*ratio,this.y+102*ratio,15*ratio,20*ratio);
+        stroke(0, 0, 0);//head
+        ellipse(this.x+30*ratio,this.y+100*ratio,100*ratio,101*ratio);
+        fill(255, 255, 255);//eyes
+        ellipse(this.x+56*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        ellipse(this.x+11*ratio,this.y+94*ratio,30*ratio,30*ratio);
+        fill(116, 183, 214);
+        ellipse(this.x+56*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        ellipse(this.x+13*ratio,this.y+94*ratio,16*ratio,15*ratio);
+        stroke(145, 92, 0);//eyebrows
+        strokeWeight(1.8);
+        line(this.x+71*ratio,this.y+76*ratio,this.x+39*ratio,this.y+75*ratio);
+        line(this.x-3*ratio,this.y+76*ratio,this.x+26*ratio,this.y+75*ratio);
+        fill(214, 120, 120);//mouth
+        arc(this.x+34*ratio,this.y+128*ratio,32*ratio,22*ratio,0,180);
+        noStroke();//hair
+        fill(199, 142, 58);
+        ellipse(this.x+2*ratio,this.y+63*ratio,52*ratio,19*ratio);
+        ellipse(this.x+5*ratio,this.y+58*ratio,52*ratio,19*ratio);
+        ellipse(this.x+16*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        ellipse(this.x+32*ratio,this.y+47*ratio,52*ratio,19*ratio);
+        ellipse(this.x+66*ratio,this.y+61*ratio,52*ratio,19*ratio);
+        ellipse(this.x+57*ratio,this.y+54*ratio,52*ratio,19*ratio);
+        ellipse(this.x+48*ratio,this.y+51*ratio,52*ratio,19*ratio);
+        arc(this.x+66*ratio,this.y+48*ratio,69*ratio,67*ratio,34,197);
+        arc(this.x+1*ratio,this.y+48*ratio,69*ratio,65*ratio,-17,142);
+        stroke(0, 0, 0);//nose
+        strokeWeight(1);
+        fill(255,224,189);
+        line(this.x+42*ratio,this.y+122*ratio,this.x+36*ratio,this.y+103*ratio);
+        line(this.x+31*ratio,this.y+121*ratio,this.x+40*ratio,this.y+121*ratio);
+    };
+    
+Zack.prototype.up = function() {
+    this.y -= 2;
+};
+
+Zack.prototype.down = function() {
+    this.y += 2;
+};
+
+Zack.prototype.left = function() {
+    this.x -= 2;
+};
+
+Zack.prototype.right = function() {
+    this.x += 2;
+};
+
+var zackBitmoji2 = new Zack(100, 50, 50);
+
+draw = function() {
+    background(255, 255, 255);
+    if (keyIsPressed && keyCode === 38) {
+    zackBitmoji2.up();
+    } else if (keyIsPressed && keyCode === 40){
+        zackBitmoji2.down();
+    } else if (keyIsPressed && keyCode === 39) {
+    zackBitmoji2.right();
+    }
+    else if (keyIsPressed && keyCode === 37) {
+    zackBitmoji2.left();
+    }
+    zackBitmoji2.draw();
+};
