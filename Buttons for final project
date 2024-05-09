@@ -1,0 +1,38 @@
+var currentScene;
+
+var btn1 = {
+    x: 15,
+    y: 10,
+    width: 58,
+    height: 25
+};
+
+var btn2 = {
+    x: 313,
+    y: 5,
+    width: 81,
+    height: 25
+};
+
+var drawButton = function(btn) {
+    fill(0, 234, 255);
+    rect(btn.x, btn.y, btn.width, btn.height, 5);
+};
+
+var isMouseInside = function(btn) {
+    return (mouseX >= btn.x &&
+            mouseX <= (btn.x+btn.width) &&
+            mouseY >= btn.y && 
+            mouseY <= (btn.y+btn.height));
+};
+
+mouseClicked = function() {
+    if (isMouseInside(btn1)) {
+        currentScene = 1;
+    } else if (isMouseInside(btn2)) {
+        currentScene = 2;
+    }
+};
+
+drawButton(btn1);
+drawButton(btn2);
